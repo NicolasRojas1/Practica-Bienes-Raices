@@ -6,6 +6,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //funcion para cambiar el tema
 function darkMode() {
+
+    const prefiereDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+    //console.log(prefiereDarkMode.matches);
+    //Por medio de este codigo añade el dark mode segun la preferencia del usuario con su navegador
+    if (prefiereDarkMode.matches) {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+
+    }
+    //Si el usuario cambia las preferencias en el navegador, este evento escuchara la respuesta y aplicará el codigo segun lo seleccionado
+    prefiereDarkMode.addEventListener('change', function() {
+        if (prefiereDarkMode.matches) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+    
+        }
+    })
+    
+
     const botonDarkMode = document.querySelector('.dark-mode-boton');
 
     botonDarkMode.addEventListener('click', function() {
