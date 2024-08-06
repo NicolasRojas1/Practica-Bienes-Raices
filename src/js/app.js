@@ -1,7 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     eventListeners();
+
+    darkMode();
 });
+
+//funcion para cambiar el tema
+function darkMode() {
+    const botonDarkMode = document.querySelector('.dark-mode-boton');
+
+    botonDarkMode.addEventListener('click', function() {
+        //lo agregará en el body
+        document.body.classList.toggle('dark-mode');
+    });
+}
 
 function eventListeners() {
     //Selecciono el boton
@@ -31,7 +43,7 @@ function ajustarMenu() {
         if (window.matchMedia("(max-width: 768px)").matches) {
             if (navegacion.classList.contains('mostrar')) {
                 console.log('Menu desplegado en móvil');
-                barra.style.height = '30rem';
+                barra.style.height = '32rem';
             } else {
                 console.log('Menu cerrado en móvil');
                 barra.style.height = '12rem';
