@@ -1,5 +1,6 @@
 .barra {
     flex-direction: column;
+    height: 13rem;
     @include tablet {
         flex-direction: row;
         justify-content: space-between;
@@ -14,7 +15,7 @@
 .navegacion {
     visibility: hidden; //Para que no aparezca el menu en tamaños menores
     opacity: 0;
-    transition: visibility .3s ease-in-out, opacity 0.5s linear;
+    transition: visibility .1s ease-in-out, opacity 1s linear;
 
     @include tablet {
         display: flex;
