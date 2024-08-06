@@ -5,11 +5,16 @@
         color: $blanco;
     }
 
-    a,h1,h2,h3,h4 {
+    a,
+    h1,
+    h2,
+    h3,
+    h4 {
         color: $gris;
     }
 
-    .anuncio {
+    .anuncio,
+    .resumen-propiedad {
         background-color: $grisOscuro;
         border: 1px solid $grisOscuro;
 
@@ -20,7 +25,31 @@
         .icono {
             filter: invert(100%);
         }
+
     }
 
-    
+    .texto-nosotros blockquote {
+        color: $blanco;
+    }
+
+    .formulario {
+
+        label,
+        legend,
+        p {
+            color: $gris;
+        }
+
+        input:not([type="submit"]),
+        textarea,
+        select {
+            //a todos menos al tipo submit
+            background-color: $grisOscuro;
+            color: $blanco;
+            border: 1px solid $grisOscuro;
+        }
+
+    }
+
+
 }

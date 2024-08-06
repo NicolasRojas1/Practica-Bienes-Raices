@@ -25,7 +25,7 @@
         }
 
         @include tablet {
-            margin: 0;
+            margin: 0 0 1rem 0;
         }
     }
 }
@@ -35,7 +35,7 @@
     flex-direction: column;
     align-items: center;
     padding-top: 3rem;
-    //height: 13rem;
+
     @include tablet {
         flex-direction: row;
         justify-content: space-between;
@@ -46,7 +46,8 @@
 .navegacion {
     visibility: hidden; //Para que no aparezca el menu en tamaños menores
     opacity: 0;
-    transition: visibility .1s ease-in-out, opacity 1s linear;
+    height: 0; //elimina la altura del menu hamburguesa
+    transition: visibility .1s ease-in-out, opacity 1s linear, height .5s linear;
 
     @include tablet {
         display: flex;
@@ -84,4 +85,5 @@
 .mostrar {
     visibility: visible;
     opacity: 1;
+    height: auto; //ajusta a los enlaces que se tiene
 }
