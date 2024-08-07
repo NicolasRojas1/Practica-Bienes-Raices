@@ -1,6 +1,7 @@
 <?php
-    $inicio = true;
-    include './includes/templates/header.php';
+    //Require se utiliza para funciones, codigo mas complejo
+    require 'includes/funciones.php';
+    incluirTemplate('header', $inicio = true);
 ?>
 
 <main class="contenedor seccion">
@@ -194,5 +195,5 @@
 </div>
 
 <?php
-    include './includes/templates/footer.php';
+    incluirTemplate('footer');
 ?>

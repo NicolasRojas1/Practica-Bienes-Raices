@@ -1,5 +1,7 @@
 <?php
-    include './includes/templates/header.php';
+    //Require se utiliza para funciones, codigo mas complejo
+    require 'includes/funciones.php';
+    incluirTemplate('header');
 ?>
 
     <main class="contenedor seccion contenido-centrado">
@@ -38,5 +40,5 @@
 
     </main>
 <?php
-    include './includes/templates/footer.php';
+    incluirTemplate('footer');
 ?>
