@@ -3,6 +3,10 @@
 require '../../includes/config/database.php';
 $db = conectarDB();
 
+//Consultar para obtener los vendedores
+$consulta = "SELECT * FROM vendedores";
+$resultado = mysqli_query($db, $consulta);
+
 //Arreglo para validar datos de entrada
 $errores = [];
 
@@ -28,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $wc = $_POST['wc'];
     $estacionamiento = $_POST['estacionamiento'];
     $vendedorId = $_POST['vendedor'];
+    $creado = date('Y/m/d');
 
     if (!$titulo) {
         $errores[] = "Debes añadir un titulo";
@@ -64,14 +69,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //Revisamos el arreglo de errores, debe estar vacio
     if (empty($errores)) {
         //Insertar en la db
-        $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, vendedorId) VALUES ( '$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$vendedorId') ";
+        $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ( '$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId') ";
 
         //echo $query;
 
         $resultado = mysqli_query($db, $query);
 
         if ($resultado) {
-            echo "Insertado correctamente";
+            // Redireccionar al usuario, solo funciona si no hay nada de HTML previo
+            header('Location: /bienesracies/admin/index.php');
         }
     }
 }
@@ -150,8 +156,9 @@ incluirTemplate('header');
 
             <select name="vendedor">
                 <option value="">-- Seleccione --</option>
-                <option value="1">Nicolas</option>
-                <option value="1">Yenni</option>
+                <?php while ($vendedor = mysqli_fetch_assoc($resultado) ) : ?>
+                    <option <?php echo $vendedorId === $vendedor['id'] ? 'selected' : ''; ?> value="<?php echo $vendedor['id']; ?>"> <?php echo $vendedor['nombre'] . " " . $vendedor['apellido']; ?></option>
+                <?php endwhile; ?>
             </select>
         </fieldset>
 
