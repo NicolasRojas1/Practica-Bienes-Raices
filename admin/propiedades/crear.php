@@ -35,6 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vendedorId = mysqli_real_escape_string( $db,  $_POST['vendedor'] );
     $creado = date('Y/m/d');
 
+    //Asigno files hacia una variable
+    $imagen = $_FILES['imagen'];
+
+
     if (!$titulo) {
         $errores[] = "Debes añadir un titulo";
     }
@@ -63,12 +67,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = "Elige un vendedor";
     }
 
+    //php solo permite hasta 2 megas, si pasa esto se genera un error
+    if (!$imagen['name'] || $imagen['error']) {
+        $errores[] = "La imagen del inmueble es necesaria";
+    }
+
+    //Valido por el tamaño (màximo de 1 mb) 
+    $medida = 1000* 1000;
+
+    if ($imagen['size'] > $medida) {
+        $errores[] = 'La imagen es muy pesada';
+    }
+
     // echo "<pre>";
     // var_dump($errores);
     // echo "</pre>";
 
     //Revisamos el arreglo de errores, debe estar vacio
     if (empty($errores)) {
+
+        // --- Subir Archivos ---
+
+        //Crear carpeta
+        $carpetaImagenes = '../../imagenes';
+
+        //Pregunta si la carpeta no existe
+        if (!is_dir($carpetaImagenes)) {
+            mkdir($carpetaImagenes);
+        }
+
+        //Subir la imagen a la carpeta creada
+        //primer parametro la ruta temporal, segundo la carpeta 
+        move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . "/archivo.jpg");
+
+        exit;
+
         //Insertar en la db
         $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ( '$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId') ";
 
@@ -101,7 +134,7 @@ incluirTemplate('header');
     <?php }
     ?>
 
-    <form class="formulario" method="POST" action="/bienesraices/admin/propiedades/crear.php">
+    <form class="formulario" method="POST" action="/bienesraices/admin/propiedades/crear.php" enctype="multipart/form-data">
         <fieldset>
             <legend>Informacion General</legend>
 
@@ -112,7 +145,7 @@ incluirTemplate('header');
             <input type="number" id="precio" name="precio" placeholder="Precio Propiedad" value="<?php echo $precio ?>">
 
             <label for="imagen">Imagen:</label>
-            <input type="file" id="imagen" accept="image/jpeg, image/png">
+            <input type="file" id="imagen" accept="image/jpeg, image/png" name="imagen">
 
             <label for="descripcion">Descripcion:</label>
             <textarea id="descripcion" name="descripcion"><?php echo $descripcion ?></textarea>
