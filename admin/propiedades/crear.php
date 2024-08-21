@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($resultado) {
             // Redireccionar al usuario, solo funciona si no hay nada de HTML previo
-            header('Location: /bienesracies/admin/index.php');
+            header('Location: /bienesraices/admin/index.php?resultado=1');
         }
     }
 }

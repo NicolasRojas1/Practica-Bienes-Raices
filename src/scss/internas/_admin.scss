@@ -9,4 +9,8 @@
     &.error { //Estan en el mismo nivel, alerta y error
         background-color: $rojo;
     }
+
+    &.exito {
+        background-color: $verde;
+    }
 }
