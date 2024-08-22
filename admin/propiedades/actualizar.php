@@ -42,9 +42,9 @@ $errores = [];
 //Si se usa el formulario imprima en var dump esa informacion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // echo "<pre>";
-    // var_dump($_POST);
-    // echo "</pre>";
+     echo "<pre>";
+     var_dump($_POST);
+     echo "</pre>";
 
     //Asi capturo la informacion del formulario
     $titulo = mysqli_real_escape_string( $db,  $_POST['titulo'] );
@@ -88,20 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = "Elige un vendedor";
     }
 
-    //php solo permite hasta 2 megas, si pasa esto se genera un error
-    if (!$imagen['name'] || $imagen['error']) {
-        $errores[] = "La imagen del inmueble es necesaria";
-    }
-
     //Valido por el tamaño (màximo de 1 mb) 
     $medida = 1000* 1000;
     if ($imagen['size'] > $medida) {
         $errores[] = 'La imagen es muy pesada';
     }
-
-    // echo "<pre>";
-    // var_dump($errores);
-    // echo "</pre>";
 
     //Revisamos el arreglo de errores, debe estar vacio
     if (empty($errores)) {
@@ -123,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //primer parametro la ruta temporal, segundo la carpeta 
         move_uploaded_file( $imagen['tmp_name'], $carpetaImagenes . $nombreImagen );
 
-        //Insertar propiedad en la db
-        $query = " INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ( '$titulo', '$precio', '$nombreImagen', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId' ) ";
+        //Actualizar propiedad en la db
+        $query = " UPDATE propiedades SET titulo = '${titulo}', precio = ${precio}, descripcion = '${descripcion}', habitaciones = ${habitaciones}, wc = ${wc}, estacionamiento = ${estacionamiento}, vendedorId = ${vendedorId} WHERE id = ${id}";
 
         //echo $query;
 
@@ -132,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($resultado) {
             // Redireccionar al usuario, solo funciona si no hay nada de HTML previo
-            header('Location: /bienesraices/admin/index.php?resultado=1');
+            header('Location: /bienesraices/admin/index.php?resultado=2');
         }
     }
 }
@@ -155,7 +146,8 @@ incluirTemplate('header');
     <?php }
     ?>
 
-    <form class="formulario" method="POST" action="/bienesraices/admin/propiedades/crear.php" enctype="multipart/form-data">
+    <!-- Elimino el action, para que se envie en este mismo archivo -->
+    <form class="formulario" method="POST" enctype="multipart/form-data">
         <fieldset>
             <legend>Informacion General</legend>
 
