@@ -10,9 +10,18 @@ if (!$id) {
     header('Location: /bienesraices/admin/index.php');
 }
 
-//DB
+//conexion a la DB
 require '../../includes/config/database.php';
 $db = conectarDB();
+
+//Obtener los datos de la propiedad
+$consulta = "SELECT * FROM propiedades WHERE id = ${id}";
+$resultado = mysqli_query($db, $consulta);
+$propiedad = mysqli_fetch_assoc($resultado);
+
+// echo "<pre>";
+// var_dump($propiedad);
+// echo "</pre>";
 
 //Consultar para obtener los vendedores
 $consulta = "SELECT * FROM vendedores";
@@ -21,13 +30,14 @@ $resultado = mysqli_query($db, $consulta);
 //Arreglo para validar datos de entrada
 $errores = [];
 
-    $titulo = '';
-    $precio = '';
-    $descripcion = '';
-    $habitaciones = '';
-    $wc = '';
-    $estacionamiento = '';
-    $vendedorId = '';
+    $titulo = $propiedad['titulo'];
+    $precio = $propiedad['precio'];
+    $descripcion = $propiedad['descripcion'];
+    $habitaciones = $propiedad['habitaciones'];
+    $wc = $propiedad['wc'];
+    $estacionamiento = $propiedad['estacionamiento'];
+    $vendedorId = $propiedad['vendedorId'];
+    $imagenPropiedad = $propiedad['imagen'];
 
 //Si se usa el formulario imprima en var dump esa informacion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -85,7 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //Valido por el tamaño (màximo de 1 mb) 
     $medida = 1000* 1000;
-
     if ($imagen['size'] > $medida) {
         $errores[] = 'La imagen es muy pesada';
     }
@@ -114,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //primer parametro la ruta temporal, segundo la carpeta 
         move_uploaded_file( $imagen['tmp_name'], $carpetaImagenes . $nombreImagen );
 
-        //Insertar en la db
+        //Insertar propiedad en la db
         $query = " INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ( '$titulo', '$precio', '$nombreImagen', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId' ) ";
 
         //echo $query;
@@ -158,6 +167,9 @@ incluirTemplate('header');
 
             <label for="imagen">Imagen:</label>
             <input type="file" id="imagen" accept="image/jpeg, image/png" name="imagen">
+
+    <!-- Para ver la imagen cuando se este editando la propiedad -->
+            <img src="../../imagenes/<?php echo $imagenPropiedad; ?>" class="imagen-small">
 
             <label for="descripcion">Descripcion:</label>
             <textarea id="descripcion" name="descripcion"><?php echo $descripcion ?></textarea>
