@@ -30,30 +30,30 @@ $resultado = mysqli_query($db, $consulta);
 //Arreglo para validar datos de entrada
 $errores = [];
 
-    $titulo = $propiedad['titulo'];
-    $precio = $propiedad['precio'];
-    $descripcion = $propiedad['descripcion'];
-    $habitaciones = $propiedad['habitaciones'];
-    $wc = $propiedad['wc'];
-    $estacionamiento = $propiedad['estacionamiento'];
-    $vendedorId = $propiedad['vendedorId'];
-    $imagenPropiedad = $propiedad['imagen'];
+$titulo = $propiedad['titulo'];
+$precio = $propiedad['precio'];
+$descripcion = $propiedad['descripcion'];
+$habitaciones = $propiedad['habitaciones'];
+$wc = $propiedad['wc'];
+$estacionamiento = $propiedad['estacionamiento'];
+$vendedorId = $propiedad['vendedorId'];
+$imagenPropiedad = $propiedad['imagen'];
 
 //Si se usa el formulario imprima en var dump esa informacion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-     echo "<pre>";
-     var_dump($_POST);
-     echo "</pre>";
+    echo "<pre>";
+    var_dump($_POST);
+    echo "</pre>";
 
     //Asi capturo la informacion del formulario
-    $titulo = mysqli_real_escape_string( $db,  $_POST['titulo'] );
-    $precio = mysqli_real_escape_string( $db, $_POST['precio'] );
-    $descripcion = mysqli_real_escape_string( $db, $_POST['descripcion'] );
-    $habitaciones = mysqli_real_escape_string( $db, $_POST['habitaciones'] );
-    $wc = mysqli_real_escape_string( $db, $_POST['wc'] );
-    $estacionamiento = mysqli_real_escape_string( $db, $_POST['estacionamiento'] );
-    $vendedorId = mysqli_real_escape_string( $db,  $_POST['vendedor'] );
+    $titulo = mysqli_real_escape_string($db,  $_POST['titulo']);
+    $precio = mysqli_real_escape_string($db, $_POST['precio']);
+    $descripcion = mysqli_real_escape_string($db, $_POST['descripcion']);
+    $habitaciones = mysqli_real_escape_string($db, $_POST['habitaciones']);
+    $wc = mysqli_real_escape_string($db, $_POST['wc']);
+    $estacionamiento = mysqli_real_escape_string($db, $_POST['estacionamiento']);
+    $vendedorId = mysqli_real_escape_string($db,  $_POST['vendedor']);
     $creado = date('Y/m/d');
 
     //Asigno files hacia una variable
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     //Valido por el tamaño (màximo de 1 mb) 
-    $medida = 1000* 1000;
+    $medida = 1000 * 1000;
     if ($imagen['size'] > $medida) {
         $errores[] = 'La imagen es muy pesada';
     }
@@ -107,15 +107,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mkdir($carpetaImagenes);
         }
 
-        //Generar un nombre unico, crea un id unico imposible que se repita cuyo nombre sera de la imagen
-        $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg" ;
+        $nombreImagen = '';
 
-        //Subir la imagen a la carpeta creada
-        //primer parametro la ruta temporal, segundo la carpeta 
-        move_uploaded_file( $imagen['tmp_name'], $carpetaImagenes . $nombreImagen );
+        //Reemplazo la imagen en la actualizacion
+        if ($imagen['name']) {
+            //Para eliminar archivos
+            unlink($carpetaImagenes . $propiedad['imagen']);
+
+            //Generar un nombre unico
+            $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
+
+            //Subir la imagen a la carpeta creada
+            move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
+        } else {
+            //Si no se ingresa una nueva imagen, mantiene la que ya esta en la db
+            $nombreImagen = $propiedad['imagen'];
+        }
 
         //Actualizar propiedad en la db
-        $query = " UPDATE propiedades SET titulo = '${titulo}', precio = ${precio}, descripcion = '${descripcion}', habitaciones = ${habitaciones}, wc = ${wc}, estacionamiento = ${estacionamiento}, vendedorId = ${vendedorId} WHERE id = ${id}";
+        $query = " UPDATE propiedades SET titulo = '${titulo}', precio = ${precio}, imagen = '${nombreImagen}', descripcion = '${descripcion}', habitaciones = ${habitaciones}, wc = ${wc}, estacionamiento = ${estacionamiento}, vendedorId = ${vendedorId} WHERE id = ${id}";
 
         //echo $query;
 
@@ -160,7 +170,7 @@ incluirTemplate('header');
             <label for="imagen">Imagen:</label>
             <input type="file" id="imagen" accept="image/jpeg, image/png" name="imagen">
 
-    <!-- Para ver la imagen cuando se este editando la propiedad -->
+            <!-- Para ver la imagen cuando se este editando la propiedad -->
             <img src="../../imagenes/<?php echo $imagenPropiedad; ?>" class="imagen-small">
 
             <label for="descripcion">Descripcion:</label>
@@ -171,34 +181,34 @@ incluirTemplate('header');
             <legend>Información Propiedad</legend>
 
             <label for="habitaciones">Habitaciones:</label>
-            <input 
-            type="number" 
-            id="habitaciones" 
-            name="habitaciones" 
-            placeholder="Ej: 2" 
-            min="1" 
-            max="9" 
-            value="<?php echo $habitaciones ?>">
+            <input
+                type="number"
+                id="habitaciones"
+                name="habitaciones"
+                placeholder="Ej: 2"
+                min="1"
+                max="9"
+                value="<?php echo $habitaciones ?>">
 
             <label for="wc">Baños:</label>
-            <input 
-            type="number" 
-            id="wc" 
-            name="wc" 
-            placeholder="Ej: 2" 
-            min="1" 
-            max="9" 
-            value="<?php echo $wc ?>">
+            <input
+                type="number"
+                id="wc"
+                name="wc"
+                placeholder="Ej: 2"
+                min="1"
+                max="9"
+                value="<?php echo $wc ?>">
 
             <label for="estacionamiento">Estacionamiento:</label>
-            <input 
-            type="number" 
-            id="estacionamiento" 
-            name="estacionamiento" 
-            placeholder="Ej: 2" 
-            min="1" 
-            max="9" 
-            value="<?php echo $estacionamiento ?>">
+            <input
+                type="number"
+                id="estacionamiento"
+                name="estacionamiento"
+                placeholder="Ej: 2"
+                min="1"
+                max="9"
+                value="<?php echo $estacionamiento ?>">
         </fieldset>
 
         <fieldset>
@@ -206,7 +216,7 @@ incluirTemplate('header');
 
             <select name="vendedor">
                 <option value="">-- Seleccione --</option>
-                <?php while ($vendedor = mysqli_fetch_assoc($resultado) ) : ?>
+                <?php while ($vendedor = mysqli_fetch_assoc($resultado)) : ?>
                     <option <?php echo $vendedorId === $vendedor['id'] ? 'selected' : ''; ?> value="<?php echo $vendedor['id']; ?>"> <?php echo $vendedor['nombre'] . " " . $vendedor['apellido']; ?></option>
                 <?php endwhile; ?>
             </select>
