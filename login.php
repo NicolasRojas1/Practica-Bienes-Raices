@@ -26,6 +26,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errores)) {
         
+        //Revisar si el usuario existe
+        $query = "SELECT * FROM usuarios WHERE email = '{$email}'";
+        $resultado = mysqli_query($db, $query);
+
+        var_dump($resultado);
+
+        //Num rows me permite saber si un registro existe
+        if ( $resultado -> num_rows) {
+            
+        } else {
+            $errores[] = "El usuario no existe";
+        }
     }
     echo "<pre>";
     var_dump($errores);
