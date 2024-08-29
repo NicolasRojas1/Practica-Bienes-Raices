@@ -1,4 +1,12 @@
 <?php
+//Para el login
+session_start();
+//variable creada en el login
+$auth = $_SESSION['login'];
+
+if (!$auth) {
+    header('Location: /bienesraices/index.php');
+}
 
 //Importar la conexion
 require '../includes/config/database.php';

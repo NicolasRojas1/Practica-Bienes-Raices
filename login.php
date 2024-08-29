@@ -30,18 +30,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $query = "SELECT * FROM usuarios WHERE email = '{$email}'";
         $resultado = mysqli_query($db, $query);
 
-        var_dump($resultado);
+        
 
         //Num rows me permite saber si un registro existe
         if ( $resultado -> num_rows) {
+            //Ahora si el password es correcto
+            $usuario = mysqli_fetch_assoc($resultado);
+            var_dump($usuario);
+
+            //Verificar si el password es correcto o no
+            $auth= password_verify($password, $usuario['password']);
             
+            if ($auth) {
+                //El usuario esta autenticado
+                session_start();
+
+                //Arreglo del usuario que inicia sesion
+                $_SESSION['usuario'] = $usuario['email'];
+                //variable para acceder al panel de admin
+                $_SESSION['login'] = true;
+
+            } else {
+                $errores[] = "El password es incorrecto";
+            }
         } else {
             $errores[] = "El usuario no existe";
         }
     }
-    echo "<pre>";
-    var_dump($errores);
-    echo "</pre>";
+    // echo "<pre>";
+    // var_dump($errores);
+    // echo "</pre>";
 
 }
 
