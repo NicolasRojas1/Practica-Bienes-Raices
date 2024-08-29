@@ -1,3 +1,14 @@
+<?php
+    //Si no esxite la sesion, que arranque
+    if (!isset($_SESSION)) {
+        //Llamo la sesion para tener acceso a esta
+        session_start();
+    }
+    //Si no estoy autenticado sera false
+    $auth = $_SESSION['login'] ?? false;
+    
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,6 +38,9 @@
                         <a href="anuncios.php">Anuncios</a>
                         <a href="blog.php">Blog</a>
                         <a href="contacto.php">Contacto</a>
+                        <?php if ($auth === true): ?>
+                            <a href="cerrar-sesion.php">Cerrar Sesión</a>
+                        <?php endif; ?>
                     </nav>
                 </div>
                 

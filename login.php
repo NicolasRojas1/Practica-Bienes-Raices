@@ -50,6 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //variable para acceder al panel de admin
                 $_SESSION['login'] = true;
 
+                header('Location: /bienesraices/admin/index.php');
+
             } else {
                 $errores[] = "El password es incorrecto";
             }
