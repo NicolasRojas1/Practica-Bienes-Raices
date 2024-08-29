@@ -1,8 +1,7 @@
 <?php
-//Para el login
-session_start();
-//variable creada en el login
-$auth = $_SESSION['login'];
+
+require '../includes/funciones.php';
+$auth = estaAutenticado();
 
 if (!$auth) {
     header('Location: /bienesraices/index.php');
@@ -46,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 //Incluir template
-require '../includes/funciones.php';
 incluirTemplate('header');
 ?>
 
