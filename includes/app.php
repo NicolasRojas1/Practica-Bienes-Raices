@@ -1,5 +1,6 @@
 <?php
+// Archivo principal que va a llamar funciones y clases
 
-//Con el __DIR__ se trae la ruta completa php
-define('TEMPLATES_URL', __DIR__ . '/templates');
-define('FUNCIONES_URL', __DIR__ . 'funciones.php');
+require 'funciones.php';
+require 'config/database.php';
+require __DIR__ . '/../vendor/autoload.php';

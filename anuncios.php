@@ -1,6 +1,6 @@
 <?php
 //Require se utiliza para funciones, codigo mas complejo
-require 'includes/funciones.php';
+require 'includes/app.php';
 incluirTemplate('header');
 ?>
 

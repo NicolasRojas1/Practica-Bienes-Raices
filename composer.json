@@ -1,0 +1,22 @@
+{
+    "name": "nicro/bienesraices",
+    "description": "Creando un proyecto con POO",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Nicro\\Bienesraices\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "NicolasRojas",
+            "email": "nicrojasc6@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\" : "./clasess"
+        }
+    }
+}

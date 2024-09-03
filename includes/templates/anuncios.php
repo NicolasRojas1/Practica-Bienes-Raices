@@ -1,11 +1,9 @@
 <?php
 
-//Importar la conexion (DIR para que empiece desde anuncios.php)
-require __DIR__ . '/../config/database.php';
 $db = conectarDB();
 
 //Consultar, solo 3 propiedades
-$query = "SELECT * FROM propiedades LIMIT ${limite}";
+$query = "SELECT * FROM propiedades LIMIT {$limite}";
 
 //Obtener resultado
 $resultado = mysqli_query($db, $query);

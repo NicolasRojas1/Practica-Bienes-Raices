@@ -10,8 +10,8 @@ if (!$id) {
     header('Location: /');
 }
 
-//Genero la conexion
-require __DIR__ . '/includes/config/database.php';
+require 'includes/app.php';
+
 $db = conectarDB();
 
 //Realizo la consulta
@@ -31,7 +31,6 @@ $propiedad = mysqli_fetch_assoc($resultado);
 // echo "</pre>";
 
 //Template
-require 'includes/funciones.php';
 incluirTemplate('header');
 
 ?>
