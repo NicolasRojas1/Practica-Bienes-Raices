@@ -9,14 +9,19 @@ function incluirTemplate(string $nombre, bool $inicio = false)
     include TEMPLATES_URL . "/{$nombre}.php";
 }
 
-function estaAutenticado(): bool{
+function estaAutenticado() {
     session_start();
 
-    //variable creada en el login
-    $auth = $_SESSION['login'];
-
-    if ($auth) {
-        return true;
+    //Si no esta autenticado
+    if (!$_SESSION['login']) {
+        header('Location: /bienesraices/index.php');
     }
-    return false;
+    return true;
+}
+
+function debuguear($variable) {
+    echo '<pre>';
+    var_dump($variable);
+    echo '</pre>';
+    exit;
 }
