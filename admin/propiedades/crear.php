@@ -26,9 +26,13 @@ $errores = [];
 //Si se usa el formulario imprima en var dump esa informacion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // echo "<pre>";
-    // var_dump($_POST);
-    // echo "</pre>";
+    //Nueva instancia de propiedad, la clase propiedad toma un arreglo y el metodo post tambien es un arreglo
+    $propiedad = new Propiedad($_POST);
+
+    debuguear($propiedad);
+
+    $propiedad->guardar();
+
 
     //Asi capturo la informacion del formulario
     $titulo = mysqli_real_escape_string( $db,  $_POST['titulo'] );
@@ -193,7 +197,7 @@ incluirTemplate('header');
         <fieldset>
             <legend>Vendedor</legend>
 
-            <select name="vendedor">
+            <select name="vendedorId">
                 <option value="">-- Seleccione --</option>
                 <?php while ($vendedor = mysqli_fetch_assoc($resultado) ) : ?>
                     <option <?php echo $vendedorId === $vendedor['id'] ? 'selected' : ''; ?> value="<?php echo $vendedor['id']; ?>"> <?php echo $vendedor['nombre'] . " " . $vendedor['apellido']; ?></option>
