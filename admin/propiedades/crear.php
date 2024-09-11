@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //Nueva instancia de propiedad, la clase propiedad toma un arreglo y el metodo post tambien es un arreglo
     $propiedad = new Propiedad($_POST);
 
-    debuguear($propiedad);
+    //debuguear($propiedad);
 
     $propiedad->guardar();
 
@@ -112,10 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //primer parametro la ruta temporal, segundo la carpeta 
         move_uploaded_file( $imagen['tmp_name'], $carpetaImagenes . $nombreImagen );
 
-        //Insertar en la db
-        $query = " INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ( '$titulo', '$precio', '$nombreImagen', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId' ) ";
 
-        //echo $query;
 
         $resultado = mysqli_query($db, $query);
 
