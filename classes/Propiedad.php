@@ -4,7 +4,7 @@ namespace App;
 
 class Propiedad {
 
-    //DB
+    //DB, static solo para que se cree una vez, no es necesario crear varias conexiones
     protected static $db;
     
     public $id;
@@ -38,7 +38,9 @@ class Propiedad {
         //Insertar en la db
         $query = " INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ( '$this->titulo', '$this->precio', '$this->imagen', '$this->descripcion', '$this->habitaciones', '$this->wc', '$this->estacionamiento', '$this->creado', '$this->vendedorId' ) ";
 
-        debuguear($query);
+        $resultado = self::$db-> query($query);
+
+        debuguear($resultado);
     }
 
     //Definir la conexion a la DB

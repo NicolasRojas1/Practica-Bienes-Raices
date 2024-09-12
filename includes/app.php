@@ -6,6 +6,7 @@ require 'config/database.php';
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '../../classes/Propiedad.php';
 
+// Conectarse a la DB
 $db = conectarDB();
 
 use App\Propiedad;
