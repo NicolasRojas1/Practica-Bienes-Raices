@@ -45,12 +45,21 @@ class Propiedad {
 
         //Sanitizar la entrada de los datos
         $atributos = $this->sanitizarAtributos();
-        debuguear($atributos);
+        //debuguear($atributos);
 
-        //Insertar en la db
-        $query = " INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ( '$this->titulo', '$this->precio', '$this->imagen', '$this->descripcion', '$this->habitaciones', '$this->wc', '$this->estacionamiento', '$this->creado', '$this->vendedorId' ) ";
+        //Llamar los datos de forma dinamica
+        $columnas = join(', ',array_keys($atributos));
+        $filas = join("', '",array_values($atributos));
+        // debuguear($columnas);
+        // debuguear($filas);
+ 
+        //*  Consulta para insertar datos
+        $query = "INSERT INTO propiedades($columnas) VALUES ('$filas')";
+        // debuguear($query);
 
-        $resultado = self::$db-> query($query);
+        
+        //Se pasa el query para ejecutarse en la db
+        $resultado = self::$db->query($query);
 
         debuguear($resultado);
     }
