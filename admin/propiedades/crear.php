@@ -12,16 +12,17 @@ $db = conectarDB();
 $consulta = "SELECT * FROM vendedores";
 $resultado = mysqli_query($db, $consulta);
 
-//Arreglo para validar datos de entrada
-$errores = [];
+//Arreglo para validar datos de entrada, este se encuentra en la clase
+$errores = Propiedad::getErrores();
+//debuguear($errores);
 
-    $titulo = '';
-    $precio = '';
-    $descripcion = '';
-    $habitaciones = '';
-    $wc = '';
-    $estacionamiento = '';
-    $vendedorId = '';
+$titulo = '';
+$precio = '';
+$descripcion = '';
+$habitaciones = '';
+$wc = '';
+$estacionamiento = '';
+$vendedorId = '';
 
 //Si se usa el formulario imprima en var dump esa informacion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -29,71 +30,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //Nueva instancia de propiedad, la clase propiedad toma un arreglo y el metodo post tambien es un arreglo
     $propiedad = new Propiedad($_POST);
 
-    //debuguear($propiedad);
+    //Si existen errores se guardan en este arreglo
+    $errores = $propiedad->validar();
 
-    $propiedad->guardar();
-
-
-    //Asi capturo la informacion del formulario
-    $titulo = mysqli_real_escape_string( $db,  $_POST['titulo'] );
-    $precio = mysqli_real_escape_string( $db, $_POST['precio'] );
-    $descripcion = mysqli_real_escape_string( $db, $_POST['descripcion'] );
-    $habitaciones = mysqli_real_escape_string( $db, $_POST['habitaciones'] );
-    $wc = mysqli_real_escape_string( $db, $_POST['wc'] );
-    $estacionamiento = mysqli_real_escape_string( $db, $_POST['estacionamiento'] );
-    $vendedorId = mysqli_real_escape_string( $db,  $_POST['vendedor'] );
-    $creado = date('Y/m/d');
-
-    //Asigno files hacia una variable
-    $imagen = $_FILES['imagen'];
-
-
-    if (!$titulo) {
-        $errores[] = "Debes añadir un titulo";
-    }
-
-    if (!$precio) {
-        $errores[] = "Debes añadir un precio";
-    }
-
-    if (strlen($descripcion) < 50) {
-        $errores[] = "Debes añadir una descripcion y debe tener al menos 50 caracteres";
-    }
-
-    if (!$habitaciones) {
-        $errores[] = "El numero de habitaciones es obligatorio";
-    }
-
-    if (!$wc) {
-        $errores[] = "El numero de baños es obligatorio";
-    }
-
-    if (!$estacionamiento) {
-        $errores[] = "El numero de estacionamiento es obligatorio";
-    }
-
-    if (!$vendedorId) {
-        $errores[] = "Elige un vendedor";
-    }
-
-    //php solo permite hasta 2 megas, si pasa esto se genera un error
-    if (!$imagen['name'] || $imagen['error']) {
-        $errores[] = "La imagen del inmueble es necesaria";
-    }
-
-    //Valido por el tamaño (màximo de 1 mb) 
-    $medida = 1000* 1000;
-
-    if ($imagen['size'] > $medida) {
-        $errores[] = 'La imagen es muy pesada';
-    }
-
-    // echo "<pre>";
-    // var_dump($errores);
-    // echo "</pre>";
-
-    //Revisamos el arreglo de errores, debe estar vacio
+    //Revisamos el arreglo de errores, debe estar vacio para guardar
     if (empty($errores)) {
+
+        $propiedad->guardar();
+
+        //Asigno files hacia una variable
+        $imagen = $_FILES['imagen'];
 
         // --- Subir Archivos ---
 
@@ -106,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         //Generar un nombre unico, crea un id unico imposible que se repita cuyo nombre sera de la imagen
-        $nombreImagen = md5( uniqid( rand(), true ) ) . ".jpg" ;
+        $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
 
         //Subir la imagen a la carpeta creada
         //primer parametro la ruta temporal, segundo la carpeta 
-        move_uploaded_file( $imagen['tmp_name'], $carpetaImagenes . $nombreImagen );
+        move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
 
 
 
@@ -161,34 +107,34 @@ incluirTemplate('header');
             <legend>Información Propiedad</legend>
 
             <label for="habitaciones">Habitaciones:</label>
-            <input 
-            type="number" 
-            id="habitaciones" 
-            name="habitaciones" 
-            placeholder="Ej: 2" 
-            min="1" 
-            max="9" 
-            value="<?php echo $habitaciones ?>">
+            <input
+                type="number"
+                id="habitaciones"
+                name="habitaciones"
+                placeholder="Ej: 2"
+                min="1"
+                max="9"
+                value="<?php echo $habitaciones ?>">
 
             <label for="wc">Baños:</label>
-            <input 
-            type="number" 
-            id="wc" 
-            name="wc" 
-            placeholder="Ej: 2" 
-            min="1" 
-            max="9" 
-            value="<?php echo $wc ?>">
+            <input
+                type="number"
+                id="wc"
+                name="wc"
+                placeholder="Ej: 2"
+                min="1"
+                max="9"
+                value="<?php echo $wc ?>">
 
             <label for="estacionamiento">Estacionamiento:</label>
-            <input 
-            type="number" 
-            id="estacionamiento" 
-            name="estacionamiento" 
-            placeholder="Ej: 2" 
-            min="1" 
-            max="9" 
-            value="<?php echo $estacionamiento ?>">
+            <input
+                type="number"
+                id="estacionamiento"
+                name="estacionamiento"
+                placeholder="Ej: 2"
+                min="1"
+                max="9"
+                value="<?php echo $estacionamiento ?>">
         </fieldset>
 
         <fieldset>
@@ -196,7 +142,7 @@ incluirTemplate('header');
 
             <select name="vendedorId">
                 <option value="">-- Seleccione --</option>
-                <?php while ($vendedor = mysqli_fetch_assoc($resultado) ) : ?>
+                <?php while ($vendedor = mysqli_fetch_assoc($resultado)) : ?>
                     <option <?php echo $vendedorId === $vendedor['id'] ? 'selected' : ''; ?> value="<?php echo $vendedor['id']; ?>"> <?php echo $vendedor['nombre'] . " " . $vendedor['apellido']; ?></option>
                 <?php endwhile; ?>
             </select>
