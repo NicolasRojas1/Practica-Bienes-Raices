@@ -5,7 +5,7 @@ estaAutenticado();
 
 use App\Propiedad;
 
-//Implementar un metodo para obtener todas las propiedades con activeRecord
+//asigno el arreglo de objetos a propiedades
 $propiedades = Propiedad::all();
 
 //Mostrar mensaje condicional

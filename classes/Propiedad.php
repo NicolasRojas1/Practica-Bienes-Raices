@@ -158,12 +158,16 @@ class Propiedad
     // Listar todas las propiedades
     public static function all()
     {
+        //Este query retorna un arreglo
         $query = "SELECT * FROM propiedades";
         //Lo relacionado a la db utiliza la siguiente sintaxis
-        self::consultarSQL($query);
+        $resultado = self::consultarSQL($query);
+
+        //retorno el arreglo con los objetos mapeados
+        return $resultado;
     }
 
-    // Metodo reutilizable para otros metodos
+    // Metodo reutilizable para otros metodos, que consultara la db
     public static function consultarSQL($query)
     {
         // Consultar db
@@ -171,15 +175,17 @@ class Propiedad
 
         // iterar resultados
         $array = [];
+        // Traera un arreglo asociativo que llama otro metodo que lo convierte en objeto
         while ($registro = $resultado->fetch_assoc()) {
+            // retorna los objetos y los agrega a un arreglo para mostrar en el index
             $array[] = self::crearObjeto($registro);
         }
 
-        debuguear($array);
-
-        // Liberar la memoria
+        // Liberar la memoria, para ayudar al servidor ya que se termino la consulta
+        $resultado->free();
 
         // Retornar los resultados
+        return $array;
     }
 
     //Toma un arreglo que es el resultado de la db y crea un objeto en memoria que es un espejo de lo que hay en la db
@@ -189,7 +195,7 @@ class Propiedad
 
         foreach ($registro as $key => $value) {
 
-            //verificar que una propiedad exista
+            //verificar que una propiedad exista, mientras mapea los datos de arreglo hacia objetos que quedan unicamente en memoria
             if (property_exists($objeto, $key)) {
                 $objeto->$key = $value;
             }
