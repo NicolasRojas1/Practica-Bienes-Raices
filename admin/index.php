@@ -1,21 +1,12 @@
 <?php
 
-require '../includes/funciones.php';
-$auth = estaAutenticado();
+require '../includes/app.php';
+estaAutenticado();
 
-if (!$auth) {
-    header('Location: /bienesraices/index.php');
-}
+use App\Propiedad;
 
-//Importar la conexion
-require '../includes/config/database.php';
-$db = conectarDB();
-
-//Escribir el query
-$query = "SELECT * FROM propiedades";
-
-//Consultar la db
-$resultadoConsulta = mysqli_query($db, $query);
+//Implementar un metodo para obtener todas las propiedades con activeRecord
+$propiedades = Propiedad::all();
 
 //Mostrar mensaje condicional
 $resultado = $_GET['resultado'] ?? null;

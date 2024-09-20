@@ -154,4 +154,46 @@ class Propiedad
         //Se retornan los errores al arreglo
         return self::$errores;
     }
+
+    // Listar todas las propiedades
+    public static function all()
+    {
+        $query = "SELECT * FROM propiedades";
+        //Lo relacionado a la db utiliza la siguiente sintaxis
+        self::consultarSQL($query);
+    }
+
+    // Metodo reutilizable para otros metodos
+    public static function consultarSQL($query)
+    {
+        // Consultar db
+        $resultado = self::$db->query($query);
+
+        // iterar resultados
+        $array = [];
+        while ($registro = $resultado->fetch_assoc()) {
+            $array[] = self::crearObjeto($registro);
+        }
+
+        debuguear($array);
+
+        // Liberar la memoria
+
+        // Retornar los resultados
+    }
+
+    //Toma un arreglo que es el resultado de la db y crea un objeto en memoria que es un espejo de lo que hay en la db
+    protected static function crearObjeto($registro)
+    {
+        $objeto = new self(); //con new self, estamos diciendo nueva propiedad
+
+        foreach ($registro as $key => $value) {
+
+            //verificar que una propiedad exista
+            if (property_exists($objeto, $key)) {
+                $objeto->$key = $value;
+            }
+        }
+        return $objeto;
+    }
 }
