@@ -2,6 +2,9 @@
 require '../../includes/app.php';
 
 use App\Propiedad;
+//Para usar intervention
+use Intervention\Image\ImageManagerStatic as Image;
+
 
 estaAutenticado();
 
@@ -30,40 +33,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //Nueva instancia de propiedad, la clase propiedad toma un arreglo y el metodo post tambien es un arreglo
     $propiedad = new Propiedad($_POST);
 
-    //Si existen errores se guardan en este arreglo
+    //--- Subir Archivos ---
+
+    //Crear carpeta
+    $carpetaImagenes = '../../imagenes/';
+
+    //Generar un nombre unico, crea un id unico imposible que se repita
+    $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
+
+    //Si existe esa imagen, se setea
+    if ($_FILES['imagen']['tmp_name']) {
+        //Realiza un resize a la imagen con Intervention
+        $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800, 600);
+
+        //En la db guarda el nombre unico de la imagen
+        $propiedad->setImagen($nombreImagen);
+    }
+
+    //Valida errores, si existen se guardan en este arreglo
     $errores = $propiedad->validar();
 
     //Revisamos el arreglo de errores, debe estar vacio para guardar
     if (empty($errores)) {
 
-        $propiedad->guardar();
-
-        //Asigno files hacia una variable
-        $imagen = $_FILES['imagen'];
-
-        // --- Subir Archivos ---
-
-        //Crear carpeta
-        $carpetaImagenes = '../../imagenes/';
-
-        //Pregunta si la carpeta no existe
-        if (!is_dir($carpetaImagenes)) {
-            mkdir($carpetaImagenes);
+        //Si no existe la carpeta la crea
+        if (!is_dir(CARPETA_IMAGENES)) {
+            mkdir(CARPETA_IMAGENES);
         }
 
-        //Generar un nombre unico, crea un id unico imposible que se repita cuyo nombre sera de la imagen
-        $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
+        //Guarda la imagen en el servidor (la ubicacion y su nombre)
+        $image->save(CARPETA_IMAGENES . $nombreImagen);
 
-        //Subir la imagen a la carpeta creada
-        //primer parametro la ruta temporal, segundo la carpeta 
-        move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
+        //Guarda en la db
+        $resultado = $propiedad->guardar();
 
-
-
-        $resultado = mysqli_query($db, $query);
-
+        //Mensaje de exito
         if ($resultado) {
-            // Redireccionar al usuario, solo funciona si no hay nada de HTML previo
+            // Redireccionar al usuario
             header('Location: /bienesraices/admin/index.php?resultado=1');
         }
     }
@@ -86,7 +92,8 @@ incluirTemplate('header');
     <?php }
     ?>
 
-    <form class="formulario" method="POST" action="/bienesraices/admin/propiedades/crear.php" enctype="multipart/form-data">
+    <form class="formulario" method="POST" action="/bienesraices/admin/propiedades/crear.php"
+        enctype="multipart/form-data">
         <fieldset>
             <legend>Informacion General</legend>
 
@@ -107,33 +114,14 @@ incluirTemplate('header');
             <legend>Información Propiedad</legend>
 
             <label for="habitaciones">Habitaciones:</label>
-            <input
-                type="number"
-                id="habitaciones"
-                name="habitaciones"
-                placeholder="Ej: 2"
-                min="1"
-                max="9"
+            <input type="number" id="habitaciones" name="habitaciones" placeholder="Ej: 2" min="1" max="9"
                 value="<?php echo $habitaciones ?>">
 
             <label for="wc">Baños:</label>
-            <input
-                type="number"
-                id="wc"
-                name="wc"
-                placeholder="Ej: 2"
-                min="1"
-                max="9"
-                value="<?php echo $wc ?>">
+            <input type="number" id="wc" name="wc" placeholder="Ej: 2" min="1" max="9" value="<?php echo $wc ?>">
 
             <label for="estacionamiento">Estacionamiento:</label>
-            <input
-                type="number"
-                id="estacionamiento"
-                name="estacionamiento"
-                placeholder="Ej: 2"
-                min="1"
-                max="9"
+            <input type="number" id="estacionamiento" name="estacionamiento" placeholder="Ej: 2" min="1" max="9"
                 value="<?php echo $estacionamiento ?>">
         </fieldset>
 
@@ -142,8 +130,11 @@ incluirTemplate('header');
 
             <select name="vendedorId">
                 <option value="">-- Seleccione --</option>
-                <?php while ($vendedor = mysqli_fetch_assoc($resultado)) : ?>
-                    <option <?php echo $vendedorId === $vendedor['id'] ? 'selected' : ''; ?> value="<?php echo $vendedor['id']; ?>"> <?php echo $vendedor['nombre'] . " " . $vendedor['apellido']; ?></option>
+                <?php while ($vendedor = mysqli_fetch_assoc($resultado)): ?>
+                    <option <?php echo $vendedorId === $vendedor['id'] ? 'selected' : ''; ?>
+                        value="<?php echo $vendedor['id']; ?>">
+                        <?php echo $vendedor['nombre'] . " " . $vendedor['apellido']; ?>
+                    </option>
                 <?php endwhile; ?>
             </select>
         </fieldset>

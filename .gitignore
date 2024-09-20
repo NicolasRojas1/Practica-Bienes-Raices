@@ -1,4 +1,13 @@
-#Modulos de node
+# Modulos de node
 node_modules/
 
+# Composer
 /vendor/
+
+# Archivos temporales de editores
+.vscode/
+*.log
+
+# Archivos del sistema
+Thumbs.db
+.DS_Store

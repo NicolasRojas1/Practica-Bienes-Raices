@@ -38,7 +38,7 @@ class Propiedad
         $this->id = $args['id'] ?? '';
         $this->titulo = $args['titulo'] ?? '';
         $this->precio = $args['precio'] ?? '';
-        $this->imagen = $args['imagen'] ?? 'imagen.jpg';
+        $this->imagen = $args['imagen'] ?? '';
         $this->descripcion = $args['descripcion'] ?? '';
         $this->habitaciones = $args['habitaciones'] ?? '';
         $this->wc = $args['wc'] ?? '';
@@ -68,7 +68,8 @@ class Propiedad
         //Se pasa el query para ejecutarse en la db
         $resultado = self::$db->query($query);
 
-        debuguear($resultado);
+        //debuguear($resultado);
+        return $resultado;
     }
 
     //Identifica y une los atributos de la DB a los ingresados
@@ -77,7 +78,8 @@ class Propiedad
         $atributos = [];
         foreach (self::$columnasDB as $columna) {
             //Para que igner el id, ya que la db lo agrega automaticamente
-            if ($columna === 'id') continue;
+            if ($columna === 'id')
+                continue;
             //Se van mapeando los atributos con las columnas de la db
             $atributos[$columna] = $this->$columna;
         }
@@ -98,6 +100,15 @@ class Propiedad
         }
 
         return $sanitizado;
+    }
+
+    // Subida de imagenes
+    public function setImagen($imagen)
+    {
+        //Asignar en el atributo imagen el nombre de la imagen
+        if ($imagen) {
+            $this->imagen = $imagen;
+        }
     }
 
     //Validacion
@@ -136,17 +147,9 @@ class Propiedad
             self::$errores[] = "Elige un vendedor";
         }
 
-        //php solo permite hasta 2 megas, si pasa esto se genera un error
-        // if (!$this->imagen['name'] || $this->imagen['error']) {
-        //     self::$errores[] = "La imagen del inmueble es necesaria";
-        // }
-
-        // //Valido por el tamaño (màximo de 1 mb) 
-        // $medida = 1000 * 1000;
-
-        // if ($this->imagen['size'] > $medida) {
-        //     self::$errores[] = 'La imagen es muy pesada';
-        // }
+        if (!$this->imagen) {
+            self::$errores[] = "La imagen del inmueble es necesaria";
+        }
 
         //Se retornan los errores al arreglo
         return self::$errores;
