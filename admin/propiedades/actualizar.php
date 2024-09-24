@@ -25,8 +25,8 @@ $propiedad = Propiedad::find($id);
 $consulta = "SELECT * FROM vendedores";
 $resultado = mysqli_query($db, $consulta);
 
-//Arreglo para validar datos de entrada
-$errores = [];
+//Validar errores
+$errores = Propiedad::getErrores();
 
 //Si se usa el formulario imprima en var dump esa informacion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -37,45 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //Sincronizo datos con lo escrito por el usuario a lo que existia en memoria
     $propiedad->sincronizar($args);
 
-    debuguear($propiedad);
-
-    //Asigno files hacia una variable
-    $imagen = $_FILES['imagen'];
-
-
-    if (!$titulo) {
-        $errores[] = "Debes añadir un titulo";
-    }
-
-    if (!$precio) {
-        $errores[] = "Debes añadir un precio";
-    }
-
-    if (strlen($descripcion) < 50) {
-        $errores[] = "Debes añadir una descripcion y debe tener al menos 50 caracteres";
-    }
-
-    if (!$habitaciones) {
-        $errores[] = "El numero de habitaciones es obligatorio";
-    }
-
-    if (!$wc) {
-        $errores[] = "El numero de baños es obligatorio";
-    }
-
-    if (!$estacionamiento) {
-        $errores[] = "El numero de estacionamiento es obligatorio";
-    }
-
-    if (!$vendedorId) {
-        $errores[] = "Elige un vendedor";
-    }
-
-    //Valido por el tamaño (màximo de 1 mb) 
-    $medida = 1000 * 1000;
-    if ($imagen['size'] > $medida) {
-        $errores[] = 'La imagen es muy pesada';
-    }
+    // Recorre el arreglo que esta en memoria y trae los errores que se presenten
+    $errores = $propiedad->validar();
 
     //Revisamos el arreglo de errores, debe estar vacio
     if (empty($errores)) {
