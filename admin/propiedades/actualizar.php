@@ -1,11 +1,10 @@
 <?php
 
-require '../../includes/funciones.php';
-$auth = estaAutenticado();
+use App\Propiedad;
 
-if (!$auth) {
-    header('Location: /bienesraices/index.php');
-}
+require '../../includes/app.php';
+
+estaAutenticado();
 
 //Obteniendo el id que paso por la url
 $id = $_GET['id'];
@@ -17,14 +16,8 @@ if (!$id) {
     header('Location: /bienesraices/admin/index.php');
 }
 
-//conexion a la DB
-require '../../includes/config/database.php';
-$db = conectarDB();
-
 //Obtener los datos de la propiedad
-$consulta = "SELECT * FROM propiedades WHERE id = {$id}";
-$resultado = mysqli_query($db, $consulta);
-$propiedad = mysqli_fetch_assoc($resultado);
+$propiedad = Propiedad::find($id);
 
 // echo "<pre>";
 // var_dump($propiedad);

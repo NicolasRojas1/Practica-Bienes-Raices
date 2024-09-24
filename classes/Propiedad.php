@@ -167,6 +167,16 @@ class Propiedad
         return $resultado;
     }
 
+    // Busca una registro por su id
+    public static function find($id) {
+        $query = "SELECT * FROM propiedades WHERE id = {$id}";
+
+        //para que traiga no un arreglo sino que un objeto
+        $resultado = self::consultarSQL($query);
+
+        debuguear($resultado);
+    }
+
     // Metodo reutilizable para otros metodos, que consultara la db
     public static function consultarSQL($query)
     {
