@@ -25,7 +25,7 @@ $errores = Propiedad::getErrores();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //Nueva instancia de propiedad, la clase propiedad toma un arreglo y el metodo post tambien es un arreglo
-    $propiedad = new Propiedad($_POST);
+    $propiedad = new Propiedad($_POST['propiedad']);
 
     //Crear carpeta
     $carpetaImagenes = '../../imagenes/';
@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombreImagen = md5(uniqid(rand(), true)) . ".jpg";
 
     //Si existe esa imagen, se setea
-    if ($_FILES['imagen']['tmp_name']) {
+    if ($_FILES['propiedad']['tmp_name']['imagen']) {
         //Realiza un resize a la imagen con Intervention
-        $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800, 600);
+        $image = Image::make($_FILES['propiedad']['tmp_name']['imagen'])->fit(800, 600);
 
         //En la db guarda el nombre unico de la imagen
         $propiedad->setImagen($nombreImagen);

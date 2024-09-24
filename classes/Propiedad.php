@@ -44,7 +44,7 @@ class Propiedad
         $this->wc = $args['wc'] ?? '';
         $this->estacionamiento = $args['estacionamiento'] ?? '';
         $this->creado = date('Y/m/d');
-        $this->vendedorId = $args['vendedorId'] ?? '';
+        $this->vendedorId = $args['vendedorId'] ?? 1;
     }
 
     public function guardar()
@@ -168,7 +168,8 @@ class Propiedad
     }
 
     // Busca una registro por su id
-    public static function find($id) {
+    public static function find($id)
+    {
         $query = "SELECT * FROM propiedades WHERE id = {$id}";
 
         //para que traiga no un arreglo sino que un objeto
@@ -212,5 +213,18 @@ class Propiedad
             }
         }
         return $objeto;
+    }
+
+    //Sincroniza el objeto en memoria con los cambios realizados por el usuario
+    //Toma un arreglo vacio
+    public function sincronizar($args = [])
+    {
+        //Se recorre el arreglo de tipo POST para ir asignando sus valores
+        foreach ($args as $key => $value) {
+            //con this se refiere a la propiedad
+            if (property_exists($this, $key) && !is_null($value)) {
+                $this->$key = $value;
+            }
+        }
     }
 }
