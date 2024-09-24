@@ -174,7 +174,8 @@ class Propiedad
         //para que traiga no un arreglo sino que un objeto
         $resultado = self::consultarSQL($query);
 
-        debuguear($resultado);
+        //array shift sirve para retornar el primer resultado de un arreglo
+        return array_shift($resultado);
     }
 
     // Metodo reutilizable para otros metodos, que consultara la db
