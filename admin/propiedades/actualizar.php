@@ -27,7 +27,7 @@ $propiedad = Propiedad::find($id);
 $consulta = "SELECT * FROM vendedores";
 $resultado = mysqli_query($db, $consulta);
 
-//Validar errores
+// Arreglo con mensajes de errores
 $errores = Propiedad::getErrores();
 
 //Si se usa el formulario imprima en var dump esa informacion
@@ -54,26 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $propiedad->setImagen($nombreImagen);
     }
 
-    debuguear($propiedad);
-
     //Revisamos el arreglo de errores, debe estar vacio
     if (empty($errores)) {
+        //Almacenar la imagen
+        $image->save(CARPETA_IMAGENES . $nombreImagen);
 
-
-       
-        exit;
-
-        //Actualizar propiedad en la db
-        $query = " UPDATE propiedades SET titulo = '{$titulo}', precio = {$precio}, imagen = '{$nombreImagen}', descripcion = '{$descripcion}', habitaciones = {$habitaciones}, wc = {$wc}, estacionamiento = {$estacionamiento}, vendedorId = {$vendedorId} WHERE id = {$id}";
-
-        //echo $query;
-
-        $resultado = mysqli_query($db, $query);
-
-        if ($resultado) {
-            // Redireccionar al usuario, solo funciona si no hay nada de HTML previo
-            header('Location: /bienesraices/admin/index.php?resultado=2');
-        }
+        //Actualizo el registro
+        $propiedad->guardar();
     }
 }
 

@@ -47,23 +47,28 @@ class Propiedad
         $this->vendedorId = $args['vendedorId'] ?? 1;
     }
 
-    public function guardar()
-    {
+    public function guardar() {
+        if (isset($this->id)) {
+            // Actualizo
+            $this->actualizar();
+        }else {
+            // Creo un nuevo registro
+            $this->crear();
+        }
+    }
 
+    public function crear()
+    {
         //Sanitizar la entrada de los datos
         $atributos = $this->sanitizarAtributos();
-        //debuguear($atributos);
 
         //Llamar los datos de forma dinamica
         $columnas = join(', ', array_keys($atributos));
         $filas = join("', '", array_values($atributos));
-        // debuguear($columnas);
-        // debuguear($filas);
 
         //*  Consulta para insertar datos
         $query = "INSERT INTO propiedades($columnas) VALUES ('$filas')";
         // debuguear($query);
-
 
         //Se pasa el query para ejecutarse en la db
         $resultado = self::$db->query($query);
@@ -72,6 +77,30 @@ class Propiedad
         return $resultado;
     }
 
+    public function actualizar() {
+        //Sanitizar la entrada de los datos
+        $atributos = $this->sanitizarAtributos();
+
+        $valores = [];
+        //Recorremos los elementos tanto llave como valor
+        foreach($atributos as $key => $value) {
+            $valores[] = "{$key}='{$value}'";    
+        }
+        //Generando la consulta de actualizar registro
+        $query = " UPDATE propiedades SET ";
+        $query .= join(', ', $valores);
+        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+        $query .= " LIMIT 1 ";
+
+        $resultado = self::$db->query($query);
+
+        //Redirecciono
+        if ($resultado) {
+            // Redireccionar al usuario, solo funciona si no hay nada de HTML previo
+            header('Location: /bienesraices/admin/index.php?resultado=2');
+        }
+    }
+    
     //Identifica y une los atributos de la DB a los ingresados
     public function atributos()
     {
@@ -105,8 +134,8 @@ class Propiedad
     // Subida de imagenes
     public function setImagen($imagen)
     {
-        //Comprobar si existe el archivo
-        if($this-> id) {
+        //Comprobar si existe el archivo, isset revisa que exista y que tenga un valor
+        if(isset($this-> id)) {
             //file_exists para comprobar si existe el archivo con la superglobal de CARPETA IMAGENES
             $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen );
 
