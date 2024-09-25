@@ -105,6 +105,17 @@ class Propiedad
     // Subida de imagenes
     public function setImagen($imagen)
     {
+        //Comprobar si existe el archivo
+        if($this-> id) {
+            //file_exists para comprobar si existe el archivo con la superglobal de CARPETA IMAGENES
+            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen );
+
+            //Con esto elimino la imagen
+            if($existeArchivo) {  
+                unlink(CARPETA_IMAGENES . $imagen);
+              }
+        }
+
         //Asignar en el atributo imagen el nombre de la imagen
         if ($imagen) {
             $this->imagen = $imagen;
