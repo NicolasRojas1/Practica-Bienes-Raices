@@ -100,6 +100,17 @@ class Propiedad
             header('Location: /bienesraices/admin/index.php?resultado=2');
         }
     }
+    //Eliminar un registro
+    public function eliminar() {
+        //Se escapa el id es por que se hace una consulta en la db y asi evito que inyecten codigo malicioso
+        $query = "DELETE FROM propiedades WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
+        $resultado = self::$db->query($query);
+
+        if ($resultado) {
+            $this-> borrarImagen();
+            header('Location: /bienesraices/admin/index.php?resultado=3');
+        }
+    }
     
     //Identifica y une los atributos de la DB a los ingresados
     public function atributos()
@@ -134,21 +145,28 @@ class Propiedad
     // Subida de imagenes
     public function setImagen($imagen)
     {
-        //Comprobar si existe el archivo, isset revisa que exista y que tenga un valor
-        if(isset($this-> id)) {
-            //file_exists para comprobar si existe el archivo con la superglobal de CARPETA IMAGENES
-            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen );
-
-            //Con esto elimino la imagen
-            if($existeArchivo) {  
-                unlink(CARPETA_IMAGENES . $imagen);
-              }
+        // Elimina la imagen previa
+        if(isset($this-> id)) {   
+                    
+            $this->borrarImagen();
         }
 
-        //Asignar en el atributo imagen el nombre de la imagen
+        //Asigna la nueva imagen
         if ($imagen) {
             $this->imagen = $imagen;
         }
+    }
+
+    // Eliminar el archivo
+    public function borrarImagen() {
+
+        //file_exists para comprobar si existe el archivo con la superglobal de CARPETA IMAGENES
+        $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen );
+
+        //Con esto elimino la imagen
+        if($existeArchivo) {  
+            unlink(CARPETA_IMAGENES . $this->imagen);
+          }
     }
 
     //Validacion

@@ -10,6 +10,7 @@ estaAutenticado();
 
 //Obteniendo el id que paso por la url
 $id = $_GET['id'];
+
 //para prevenir que pasen otro elemento que no sea el id (solo enteros)
 $id = filter_var($id, FILTER_VALIDATE_INT);
 
