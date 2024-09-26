@@ -4,9 +4,11 @@ require '../includes/app.php';
 estaAutenticado();
 
 use App\Propiedad;
+use App\Vendedor;
 
-//asigno el arreglo de objetos a propiedades
+// Metodo para obtener todas las propiedades
 $propiedades = Propiedad::all();
+$vendedores = Vendedor::all();
 
 //Mostrar mensaje condicional
 $resultado = $_GET['resultado'] ?? null;
@@ -22,8 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $propiedad = Propiedad::find($id);
 
         $propiedad->eliminar();
-
-
     }
 }
 
