@@ -35,7 +35,7 @@ class Propiedad
     public function __construct($args = [])
     {
         // ?? funcionan como placeholder cuando no se ingresa el valor
-        $this->id = $args['id'] ?? '';
+        $this->id = $args['id'] ?? NULL;
         $this->titulo = $args['titulo'] ?? '';
         $this->precio = $args['precio'] ?? '';
         $this->imagen = $args['imagen'] ?? '';
@@ -47,8 +47,9 @@ class Propiedad
         $this->vendedorId = $args['vendedorId'] ?? 1;
     }
 
-    public function guardar() {
-        if (isset($this->id)) {
+    public function guardar(){
+        //Para actualizar el id no debe de estar nulo
+        if (!is_null($this->id)) {
             // Actualizo
             $this->actualizar();
         }else {
@@ -73,8 +74,11 @@ class Propiedad
         //Se pasa el query para ejecutarse en la db
         $resultado = self::$db->query($query);
 
-        //debuguear($resultado);
-        return $resultado;
+        //Mensaje de exito
+        if ($resultado) {
+            // Redireccionar al usuario
+            header('Location: /bienesraices/admin/index.php?resultado=1');
+        }
     }
 
     public function actualizar() {
@@ -147,7 +151,7 @@ class Propiedad
     {
         // Elimina la imagen previa
         if(isset($this-> id)) {   
-                    
+
             $this->borrarImagen();
         }
 

@@ -27,10 +27,12 @@ function debuguear($variable) {
     exit;
 }
 
-// Escapa / Sanitizar el HTMl, para evitar la inyeccion de codigo al ingresar datos en los formularios importante en todos los proyectos
+// Escapa / Sanitizar el HTML, para evitar la inyección de código al ingresar datos en los formularios
 function s($html) {
-    $s = htmlspecialchars($html);
+    // Asegurarse de que siempre sea una cadena válida, incluso si es null
+    $s = htmlspecialchars($html ?? '', ENT_QUOTES, 'UTF-8');
     return $s;
 }
+
 
 

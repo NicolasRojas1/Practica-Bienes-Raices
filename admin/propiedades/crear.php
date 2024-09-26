@@ -19,7 +19,6 @@ $resultado = mysqli_query($db, $consulta);
 
 //Arreglo para validar datos de entrada, este se encuentra en la clase
 $errores = Propiedad::getErrores();
-//debuguear($errores);
 
 //Si se usa el formulario imprima en var dump esa informacion
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,13 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image->save(CARPETA_IMAGENES . $nombreImagen);
 
         //Guarda en la db
-        $resultado = $propiedad->guardar();
-
-        //Mensaje de exito
-        if ($resultado) {
-            // Redireccionar al usuario
-            header('Location: /bienesraices/admin/index.php?resultado=1');
-        }
+        $propiedad->guardar();
     }
 }
 
