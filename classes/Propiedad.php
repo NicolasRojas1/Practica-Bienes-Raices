@@ -150,7 +150,7 @@ class Propiedad
     public function setImagen($imagen)
     {
         // Elimina la imagen previa
-        if(isset($this-> id)) {   
+        if( !is_null($this-> id) ) {   
 
             $this->borrarImagen();
         }
