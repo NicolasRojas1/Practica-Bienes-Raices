@@ -7,45 +7,19 @@ class ActiveRecord {
      protected static $db;
 
      //Para el proceso de sanitizar, se crea un arreglo para identificar la forma de los datos
-     protected static $columnasDB = ['id', 'titulo', 'precio', 'imagen', 'descripcion', 'habitaciones', 'wc', 'estacionamiento', 'creado', 'vendedorId'];
+     protected static $columnasDB = [];
 
      // Para saber que tabla de la db se trabaja en la herencia
      protected static $tabla = '';
  
      //Errores para validar, static por que no se requiere instanciar
      protected static $errores = [];
- 
-     public $id;
-     public $titulo;
-     public $precio;
-     public $imagen;
-     public $descripcion;
-     public $habitaciones;
-     public $wc;
-     public $estacionamiento;
-     public $creado;
-     public $vendedorId;
- 
+
      //Definir la conexion a la DB
      public static function setDB($database)
      {
          //self hace referencia a los atributos estaticos de una misma clase
          self::$db = $database;
-     }
- 
-     public function __construct($args = [])
-     {
-         // ?? funcionan como placeholder cuando no se ingresa el valor
-         $this->id = $args['id'] ?? NULL;
-         $this->titulo = $args['titulo'] ?? '';
-         $this->precio = $args['precio'] ?? '';
-         $this->imagen = $args['imagen'] ?? '';
-         $this->descripcion = $args['descripcion'] ?? '';
-         $this->habitaciones = $args['habitaciones'] ?? '';
-         $this->wc = $args['wc'] ?? '';
-         $this->estacionamiento = $args['estacionamiento'] ?? '';
-         $this->creado = date('Y/m/d');
-         $this->vendedorId = $args['vendedorId'] ?? 1;
      }
  
      public function guardar(){
@@ -267,7 +241,7 @@ class ActiveRecord {
      //Toma un arreglo que es el resultado de la db y crea un objeto en memoria que es un espejo de lo que hay en la db
      protected static function crearObjeto($registro)
      {
-         $objeto = new self(); //con new self, estamos diciendo nueva propiedad
+         $objeto = new static(); //con new static crea un nuevo objeto en la clase que se esta heredando
  
          foreach ($registro as $key => $value) {
  
