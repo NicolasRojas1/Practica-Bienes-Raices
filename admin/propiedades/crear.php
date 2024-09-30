@@ -2,20 +2,17 @@
 require '../../includes/app.php';
 
 use App\Propiedad;
+use App\Vendedor;
 //Para usar intervention
 use Intervention\Image\ImageManagerStatic as Image;
 
 // Verificar el logueo
 estaAutenticado();
 
-//DB
-$db = conectarDB();
-
 $propiedad = new Propiedad();
 
-//Consultar para obtener los vendedores
-$consulta = "SELECT * FROM vendedores";
-$resultado = mysqli_query($db, $consulta);
+//Consulta para obtener todos los vendedores
+$vendedores = Vendedor::all();
 
 //Arreglo para validar datos de entrada, este se encuentra en la clase
 $errores = Propiedad::getErrores();

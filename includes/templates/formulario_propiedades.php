@@ -49,12 +49,27 @@
         <fieldset>
             <legend>Vendedor</legend>
 
-            <select name="vendedorId">
-                <option value="">-- Seleccione --</option>
-                <?php while($row = mysqli_fetch_assoc($resultado)): ?> 
- 
-                <option <?php echo s($propiedad->vendedorId) === $row['id'] ? 'selected': ''; ?> value="<?php echo $row['id']; ?>"> <?php echo $row['nombre']. ' ' . $row['apellido']; ?></option>
-
-                <?php endwhile; ?> 
+            <label for="vendedor">Vendedor</label>
+            <!-- 
+            1. le damos el nombre del vendedorId de la columna en la db
+            2. id= "vendedor" es para vincularlo con el label de for="vendedor"
+            3. se itera entre los vendedores con el foreach
+            4. se llama la funcion s, para sanitizar.
+            5. Se utiliza la sintaxis de flecha para crear objetos para active record
+            6. Cada opcion debe tener un value para la db
+            7. Con el operador ternario se marca el id seleccionado con el atributo de selected con el fin de mantenerlo al recargar el formulario
+            -->
+            <select name="propiedad[vendedorId]" id="vendedor">
+                <option selected value=""> --- Selecciona ---</option>
+        
+                <?php foreach($vendedores as $vendedor): ?>
+                    <option
+                        value="<?php echo s($vendedor->id) ?>"
+                        <?php echo $propiedad->vendedorId === $vendedor->id ? 'selected' : '' ?>
+                    >                       
+                         <?php echo s($vendedor->nombre) . " " . s($vendedor->apellido); ?> 
+                    </option>
+                <?php endforeach; ?>
+                
             </select>
         </fieldset>
