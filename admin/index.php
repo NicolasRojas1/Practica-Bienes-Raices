@@ -43,6 +43,8 @@ incluirTemplate('header');
 
     <a href="/bienesraices/admin/propiedades/crear.php" class="boton boton-verde">Nueva Propiedad</a>
 
+    <h2>Propiedades</h2>
+
     <table class="propiedades">
         <thead>
             <tr>
@@ -75,11 +77,40 @@ incluirTemplate('header');
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <h2>Vendedores</h2>
+
+<table class="propiedades">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Telefono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody> <!-- Mostrar los resultados de la db -->
+            <?php foreach( $vendedores as $vendedor): ?>
+                <tr>
+                    <td> <?php echo $vendedor->id; ?> </td>
+                    <td> <?php echo $vendedor->nombre . " " . $vendedor->apellido; ?> </td>
+                    <td><?php echo $vendedor->telefono; ?> </td>
+                    <td>
+                        <!-- De este modo envio el id para poder eliminar el registro-->
+                        <form method="POST" class="w-100">
+
+                            <input type="hidden" name="id" value="<?php echo $propiedad->id ?>">
+                            <input type="submit" class="boton-rojo-block" value="Eliminar"></input>
+
+                        </form>
+                        <a href="vendedores/actualizar.php?id=<?php echo $vendedor->id; ?>" class="boton-amarillo-block">Actualizar</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </main>
 
 <?php
-//Cerrar la conexion de la db
-mysqli_close($db);
-
 incluirTemplate('footer');
 ?>
