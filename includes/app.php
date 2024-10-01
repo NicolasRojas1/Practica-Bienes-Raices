@@ -9,6 +9,7 @@ require __DIR__ . '../../classes/Propiedad.php';
 // Conectarse a la DB
 $db = conectarDB();
 
-use App\Propiedad;
+//Asi utilizo la conexion a la db en la clase activeRecord y esta hereda a las demas
+use App\ActiveRecord;
 
-Propiedad::setDB($db);
+ActiveRecord::setDB($db);

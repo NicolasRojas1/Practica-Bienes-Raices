@@ -95,7 +95,7 @@ class ActiveRecord {
      public function atributos()
      {
          $atributos = [];
-         foreach (self::$columnasDB as $columna) {
+         foreach (static::$columnasDB as $columna) {
              //Para que igner el id, ya que la db lo agrega automaticamente
              if ($columna === 'id')
                  continue;
@@ -197,7 +197,7 @@ class ActiveRecord {
          // Traera un arreglo asociativo que llama otro metodo que lo convierte en objeto
          while ($registro = $resultado->fetch_assoc()) {
              // retorna los objetos y los agrega a un arreglo para mostrar en el index
-             $array[] = self::crearObjeto($registro);
+             $array[] = static::crearObjeto($registro);
          }
  
          // Liberar la memoria, para ayudar al servidor ya que se termino la consulta

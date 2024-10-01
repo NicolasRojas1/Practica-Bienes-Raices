@@ -1,6 +1,7 @@
 <?php
 
 use App\Propiedad;
+use App\Vendedor;
 //Para usar intervention
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -22,11 +23,10 @@ if (!$id) {
 //Obtener los datos de la propiedad
 $propiedad = Propiedad::find($id);
 
-//Se llena automaticamente por que el template del formulario tiene un echo a cada elemento
+//Obtener todos los vendedores
+$vendedores = Vendedor::all();
 
-//Consultar para obtener los vendedores
-$consulta = "SELECT * FROM vendedores";
-$resultado = mysqli_query($db, $consulta);
+//Se llena automaticamente por que el template del formulario tiene un echo a cada elemento
 
 // Arreglo con mensajes de errores
 $errores = Propiedad::getErrores();
@@ -35,7 +35,7 @@ $errores = Propiedad::getErrores();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //Asignar los atributos
-    $args= $_POST['propiedad'];
+    $args = $_POST['propiedad'];
 
     //Sincronizo datos con lo escrito por el usuario a lo que existia en memoria
     $propiedad->sincronizar($args);
@@ -57,9 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //Revisamos el arreglo de errores, debe estar vacio
     if (empty($errores)) {
-        //Almacenar la imagen
-        $image->save(CARPETA_IMAGENES . $nombreImagen);
 
+        if ($_FILES['propiedad']['tmp_name']['imagen']) {
+            //Almacenar la imagen
+            $image->save(CARPETA_IMAGENES . $nombreImagen);
+        }
         //Actualizo el registro
         $propiedad->guardar();
     }
