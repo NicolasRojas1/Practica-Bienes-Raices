@@ -16,6 +16,16 @@ $errores = Vendedor::getErrores();
 //Verifico una solicitud HTTP si es de tipo POST, para el envio de datos al servidor
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    //Crear una nueva instancia, arreglo por que vendedor es un arreglo
+    $vendedor = new Vendedor($_POST['vendedor']);
+
+    //Validar que no hayan campos vacios
+    $errores = $vendedor->validar();
+
+    //Si no hay errores
+    if(empty($errores)) {
+        $vendedor->guardar();
+    }
 }
 
 //Templates
