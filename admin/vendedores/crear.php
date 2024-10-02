@@ -24,7 +24,7 @@ incluirTemplate('header');
 ?>
 
 <main class="contenedor seccion">
-    <h1>Registrar Vendedores</h1>
+    <h1>Registrar Vendedor</h1>
 
     <a href="/bienesraices/admin/index.php" class="boton boton-verde">Volver</a>
 
