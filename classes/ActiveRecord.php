@@ -157,8 +157,8 @@ class ActiveRecord {
      public function validar()
      {
         static::$errores = [];
-         //Se retornan los errores al arreglo, static para que vaya al hijo
-         return static::$errores;
+        //Se retornan los errores al arreglo, static para que vaya al hijo
+        return static::$errores;
      }
  
      // Listar todas las propiedades
