@@ -20,10 +20,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($id) {
 
-        //Obtener los datos de la propiedad
-        $propiedad = Propiedad::find($id);
+        $tipo = $_POST['tipo'];
 
-        $propiedad->eliminar();
+        if (validarTipoContenido($tipo)) {
+
+            //Compara lo que vamos a eliminar
+            if ($tipo === 'vendedor') {
+                $vendedor = Vendedor::find($id);
+                $vendedor->eliminar();
+            } else if ($tipo === 'propiedad') {
+                //Obtener los datos de la propiedad
+                $propiedad = Propiedad::find($id);
+                $propiedad->eliminar();
+            }
+        }
     }
 }
 
@@ -36,7 +46,7 @@ incluirTemplate('header');
     <?php if (intval($resultado) === 1): ?>
         <p class="alerta exito">Anuncio creado correctamente</p>
     <?php elseif (intval($resultado) === 2): ?>
-        <p class="alerta exito">Propiedad actualizada correctamente</p>
+        <p class="alerta exito">Anuncio actualizado correctamente</p>
     <?php elseif (intval($resultado) === 3): ?>
         <p class="alerta exito">Anuncio eliminado correctamente</p>
     <?php endif; ?>
@@ -56,7 +66,7 @@ incluirTemplate('header');
             </tr>
         </thead>
         <tbody> <!-- Mostrar los resultados de la db -->
-            <?php foreach( $propiedades as $propiedad): ?>
+            <?php foreach ($propiedades as $propiedad): ?>
                 <tr>
                     <td> <?php echo $propiedad->id; ?> </td>
                     <td> <?php echo $propiedad->titulo; ?> </td>
@@ -67,7 +77,7 @@ incluirTemplate('header');
                         <form method="POST" class="w-100">
 
                             <input type="hidden" name="id" value="<?php echo $propiedad->id ?>">
-
+                            <input type="hidden" name="tipo" value="propiedad">
                             <input type="submit" class="boton-rojo-block" value="Eliminar"></input>
 
                         </form>
@@ -80,7 +90,7 @@ incluirTemplate('header');
 
     <h2>Vendedores</h2>
 
-<table class="propiedades">
+    <table class="propiedades">
         <thead>
             <tr>
                 <th>ID</th>
@@ -90,7 +100,7 @@ incluirTemplate('header');
             </tr>
         </thead>
         <tbody> <!-- Mostrar los resultados de la db -->
-            <?php foreach( $vendedores as $vendedor): ?>
+            <?php foreach ($vendedores as $vendedor): ?>
                 <tr>
                     <td> <?php echo $vendedor->id; ?> </td>
                     <td> <?php echo $vendedor->nombre . " " . $vendedor->apellido; ?> </td>
@@ -99,7 +109,8 @@ incluirTemplate('header');
                         <!-- De este modo envio el id para poder eliminar el registro-->
                         <form method="POST" class="w-100">
 
-                            <input type="hidden" name="id" value="<?php echo $propiedad->id ?>">
+                            <input type="hidden" name="id" value="<?php echo $vendedor->id ?>">
+                            <input type="hidden" name="tipo" value="vendedor">
                             <input type="submit" class="boton-rojo-block" value="Eliminar"></input>
 
                         </form>

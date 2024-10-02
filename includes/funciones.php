@@ -34,5 +34,12 @@ function s($html) {
     return $s;
 }
 
+// Validar tipo de contenido, asi no se permite eliminar algo que no debe si se modifica el html
+function validarTipoContenido($tipo) {
+    $tipos = ['vendedor', 'propiedad'];
+    //busca el arreglo, y que contenido del arreglo se quiere
+    return in_array($tipo, $tipos);
+}
+
 
 
