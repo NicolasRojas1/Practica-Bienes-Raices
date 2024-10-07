@@ -173,6 +173,20 @@ class ActiveRecord {
          //retorno el arreglo con los objetos mapeados
          return $resultado;
      }
+
+     //Listar determinado numero de registros
+     public static function get($cantidad)
+     {
+         //Este query retorna un arreglo, static busca el atributo tabla de la clase que lo hereda
+         $query = "SELECT * FROM ". static::$tabla . " LIMIT " . $cantidad;
+         //debuguear($query);
+
+         //Lo relacionado a la db utiliza la siguiente sintaxis
+         $resultado = self::consultarSQL($query);
+ 
+         //retorno el arreglo con los objetos mapeados
+         return $resultado;
+     }
  
      // Busca una registro por su id
      public static function find($id)
